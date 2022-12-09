@@ -11,4 +11,21 @@ from win32com import client as win32
 simcaq = win32.Dispatch('Umetrics.SIMCAQ')
 ```
 
-The simcaq object not only provide access to additional interfaces but also to some methods. For instance, those dealing with SIMCA-Q licensing.
+The simcaq object not only provide access to additional interfaces but also to some methods. For instance, those dealing with SIMCA-Q licensing. In the example below we used two of this methods:
+- *IsLicenseFileValid()*: Checks if a license file is present and in that case valid. 
+- *GetLicenseFileExpireDate()*: Provides the date until the license file is valid.
+
+Specifically, the script below will print whether the lices is valid and, if so, until when:
+```
+from win32com import client as win32
+
+if __name__ == '__main__':
+    simcaq = win32.Dispatch('Umetrics.SIMCAQ')
+
+    if not simcaq.IsLicenseFileValid():
+        sys.exit("Invalid license file")
+    else:
+        print("The license is vslid and it will expire in ", simcaq.GetLicenseFileExpireDate())
+```
+
+
