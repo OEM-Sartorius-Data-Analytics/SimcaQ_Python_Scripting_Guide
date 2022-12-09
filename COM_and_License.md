@@ -1,0 +1,1 @@
+# Access the COM interface & check your license
