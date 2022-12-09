@@ -11,4 +11,4 @@ python -m pip install -r requirements.txt
 
 ## Index
 
-- [Access the COM interface & check your license](COM_and_License.md).
+- [Access the COM interface & check your license](00_COM_and_License/COM_and_License.md).
