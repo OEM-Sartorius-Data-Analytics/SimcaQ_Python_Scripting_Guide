@@ -9,12 +9,21 @@ if __name__ == '__main__':
 
     PathSimcaProject = args["project"]
     
-    simcaq = win32.Dispatch('Umetrics.SIMCAQ')
+    try:
+        simcaq = win32.Dispatch('Umetrics.SIMCAQ')
 
-    project = simcaq.OpenProject(PathSimcaProject, "")
+        try:
+            project = simcaq.OpenProject(PathSimcaProject, "")
+            print("You have loaded the project ", project.GetProjectName(), ", which has ", project.GetNumberOfModels(), " models.")
+            project.DisposeProject()
 
-    print("You have loaded the project ", project.GetProjectName(), ", which has ", project.GetNumberOfModels(), " models.")
+        except:
+            print('Could not open project.')
 
-    project.DisposeProject()
+    except:
+        print('Could connect to SIMCA-Q.')
+            
+
+    
 
 
