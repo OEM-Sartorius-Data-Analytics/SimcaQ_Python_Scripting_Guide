@@ -16,6 +16,7 @@ if __name__ == '__main__':
             project = simcaq.OpenProject(PathSimcaProject, "")
             print("You have loaded the project ", project.GetProjectName())
             print("which has ", project.GetNumberOfModels(), " models.")
+            print("and ", project.GetNumberOfDatasets(), " datasets")
             project.DisposeProject()
 
         except:
