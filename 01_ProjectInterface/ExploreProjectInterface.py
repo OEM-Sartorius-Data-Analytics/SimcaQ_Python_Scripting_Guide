@@ -4,7 +4,7 @@ import argparse
 if __name__ == '__main__':
 
     ap = argparse.ArgumentParser()
-    ap.add_argument("-p", "--project", required=True, help="Path to the Simca project")
+    ap.add_argument("-p", "--project", required=True, help="Path to the SIMCA project")
     args = vars(ap.parse_args())
 
     PathSimcaProject = args["project"]
