@@ -14,7 +14,8 @@ if __name__ == '__main__':
 
         try:
             project = simcaq.OpenProject(PathSimcaProject, "")
-            print("You have loaded the project ", project.GetProjectName(), ", which has ", project.GetNumberOfModels(), " models.")
+            print("You have loaded the project ", project.GetProjectName())
+            print("which has ", project.GetNumberOfModels(), " models.")
             project.DisposeProject()
 
         except:
