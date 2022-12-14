@@ -35,5 +35,26 @@ if __name__ == '__main__':
     print(f'which has {number_models} models')
     print(f'and {number_datasets} datasets')
 
+    # Iterate over indices of all project models
+    for model_index in range(1, number_models+1):
+
+        # The index does not neccesarily coincide wit the model number
+        # But we need the model number to retrieve information about the model
+        model_of_interest_number = project.GetModelNumberFromIndex(model_index)
+
+        # Once we know the model number, we can retrieve the ModelInfo interface
+        # for the specific model
+        model_info = project.GetModelInfo(model_of_interest_number)
+
+        model_of_interest_name = model_info.GetModelName()
+
+        model_of_interest_type = model_info.GetModelType()
+
+        model_of_interest_type_name = model_info.GetModelTypeName()
+
+        print(model_of_interest_name)
+        print(model_of_interest_type)
+        print(model_of_interest_type_name)
+
     # Dispose the project object
     project.DisposeProject()
