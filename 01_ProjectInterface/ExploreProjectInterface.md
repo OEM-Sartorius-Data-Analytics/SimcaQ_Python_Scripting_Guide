@@ -10,27 +10,40 @@ import argparse
 
 if __name__ == '__main__':
 
+    # Retrieve the name of the SIMCA project passed as a parameter
+    # when calling the python script
     ap = argparse.ArgumentParser()
     ap.add_argument("-p", "--project", required=True, help="Path to the SIMCA project")
     args = vars(ap.parse_args())
-
     PathSimcaProject = args["project"]
     
+    #Connect to the SIMCA-Q COM interface
     try:
         simcaq = win32.Dispatch('Umetrics.SIMCAQ')
-
-        try:
-            project = simcaq.OpenProject(PathSimcaProject, "")
-            print("You have loaded the project ", project.GetProjectName())
-            print("which has ", project.GetNumberOfModels(), " models.")
-            print("and ", project.GetNumberOfDatasets(), " datasets")
-	    project.DisposeProject()
-
-        except:
-            print('Could not open project.')
-
     except:
-        print('Could connect to SIMCA-Q.')
+        print('Could not connect to SIMCA-Q.')
+        raise SystemExit
+
+    # Open the SIMCA project
+    try:
+        project = simcaq.OpenProject(PathSimcaProject, "")
+    except:
+        print('Could not open the project.')
+        raise SystemExit
+        
+
+    #Retrieve information about the SIMCA project
+    project_name = project.GetProjectName() 
+    number_models = project.GetNumberOfModels()
+    number_datasets = project.GetNumberOfDatasets()
+    
+    # Print the output of the used Project interface methods
+    print(f'You have loaded the project {project_name},')
+    print(f'which has {number_models} models')
+    print(f'and {number_datasets} datasets')
+
+    # Dispose the project object
+    project.DisposeProject()
 ```
 
 The python script takes as an argument the path to a SIMCA project. FOr this, the *argparse* is used. Then, A SIMCA-Q COM object is created with the help of the pywin32 extension and used to open the project. FInally we used and printed the output of two methods of the Project interface:
