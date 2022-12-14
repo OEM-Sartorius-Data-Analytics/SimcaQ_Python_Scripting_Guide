@@ -14,4 +14,4 @@ python -m pip install -r requirements.txt
 - [Access the COM interface & check your license](00_COM_and_License/COM_and_License.md).
 - [The Project Interface](01_ProjectInterface/ExploreProjectInterface.md).
 - [The ModelInfo Interface](02_ModelInfoInterface/ExploreModelInfoInterface.md).
-- [The Model Interface: Introduction](03_ModelInterface_0/ModelInterface_Introduction).
+- [The Model Interface: Introduction](03_ModelInterface_0/ModelInterface_Introduction.md).
