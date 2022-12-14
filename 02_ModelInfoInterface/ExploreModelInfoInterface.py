@@ -46,12 +46,12 @@ if __name__ == '__main__':
         # for the specific model
         model_info = project.GetModelInfo(model_of_interest_number)
 
+        # Retrieve the name and type of the model of interest
+        # from the ModelInfo object
         model_of_interest_name = model_info.GetModelName()
-
-        model_of_interest_type = model_info.GetModelType()
-
         model_of_interest_type_name = model_info.GetModelTypeName()
 
+        # and print the putput
         print(model_of_interest_name)
         print(model_of_interest_type)
         print(model_of_interest_type_name)
