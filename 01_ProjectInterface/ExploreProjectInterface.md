@@ -37,5 +37,6 @@ The python script takes as an argument the path to a SIMCA project. FOr this, th
 
 - *GetProjectName()*: Retrieves the name of the project. 
 - *GetNumberOfModels()*: Retrieves the number of models in the project, including unfitted models.
+- *GetNumberOfDatasets()*: Retrieves the number of data sets in the project.
 
 Finally, we used the Project method *DisposeProject()* to dispose of the Project object.
