@@ -31,7 +31,7 @@ if __name__ == '__main__':
             # But we need the model number to retrieve information about the model
             model_of_interest_number = project.GetModelNumberFromIndex(model_index)
 
-            # Once we know the model number, we can retrieve the ModelInfo interface
+            # Once we know the model number, we can retrieve the Model Interface
             # for the specific model
             model = project.GetModel(model_of_interest_number)
 
