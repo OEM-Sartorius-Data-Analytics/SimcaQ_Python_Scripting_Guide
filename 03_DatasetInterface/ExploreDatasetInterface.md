@@ -78,8 +78,29 @@ observation_ID_names = []
         
 # Populating the list with the names of the observation IDs
 for i in range(1,n_observation_ids+1):
-
     observation_ID_names.append(dataset.GetDataSetObservationIDName(i))
+```
+
+We can work with this code to find as well the values of the observation IDs for each observation. For this, for each observation ID we call the *Dataset* method *dataset.GetDataSetObservationNames(i)* that takes as a parameter the observation ID index. This method provides a *StringVector* object. We can now use the *StringVector* method *GetSize()* to infere the number of observations and *GetData(i)*, which takes as a parameter the observation number, to find the observation ID string associated with the specific observation:
+```
+# Number of observation IDs in the dataset
+n_observation_ids = dataset.GetNumberOfObservationIDs()
+
+# List that will contain te names for the observation IDs
+observation_ID_names = []
+
+# List of lists that will contain the value/string of the different
+# observation IDS for each observation
+observation_names = []
+        
+# Populating observation_ID_names and observation_names
+for i in range(1,n_observation_ids+1):
+    observation_ID_names.append(dataset.GetDataSetObservationIDName(i))
+    temporal_list_observation_names = []
+    obs_names = dataset.GetDataSetObservationNames(i)
+    for observation_index in range(1,obs_names.GetSize()+1):
+        temporal_list_observation_names.append(obs_names.GetData(observation_index))
+    observation_names.append(temporal_list_observation_names)
 ```
 
 
