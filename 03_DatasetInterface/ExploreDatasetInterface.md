@@ -1,14 +1,14 @@
-# The Dataset Interface: accessing datasets in SIMCA projects
+# The IDataset Interface: accessing datasets in SIMCA projects
 
-The *Dataset* interface can be accessed from *Project* objects and it provides access to the datasets within the SIMCA project/file.
+The *IDataset* interface can be accessed from *Project* objects and it provides access to the datasets within the SIMCA project/file.
 
-The *Dataset* interfaces can be accessed through the *Project* method *GetDataset()*. This method needs as a parameter the number of the dataset of interest within the SIMCA project. It is not straightforward to know this number. However, one can get it from the model index. All datasets withon a SIMCA project/file are associated within indices starting from 1 and up to the total number of datasets that can be retrieved from the *Project* method *GetNumberOfDatasets()*. Provided that we know (or find out) the index of the dataset of interest, we can get the associated dataset number by calling the Project method *GetDatasetNumberFromIndex(dataset_index)* that receives as a parameter the dataset index. Once we know the desired dataset number, we can create the *Dataset* object by running the Project method *GetDataset(dataset_of_interest_number)* that receives as a parameter the dataset number.
+The *IDataset* interfaces can be accessed through the *IProject* method *GetDataset()*. This method needs as a parameter the number of the dataset of interest within the SIMCA project. It is not straightforward to know this number. However, one can get it from the model index. All datasets withon a SIMCA project/file are associated within indices starting from 1 and up to the total number of datasets that can be retrieved from the *Project* method *GetNumberOfDatasets()*. Provided that we know (or find out) the index of the dataset of interest, we can get the associated dataset number by calling the *IProject* method *GetDatasetNumberFromIndex(dataset_index)* that receives as a parameter the dataset index. Once we know the desired dataset number, we can create the *IDataset* object by running the *IProject* method *GetDataset(dataset_of_interest_number)* that receives as a parameter the dataset number.
 
 ## An example:
 
 To exemplify the use of the *Dataset* interface, we will go through the following example script. The script takes as input parameters the path of a SIMCA file and the name of the dataset of interest and it finds and prints to a csv file the dataset.
 
-The beginning of the script resembles that of previous examples. FIrst, we import libraries and then, within the main function, we use the argparse library to associate with variables the input parameters pathSimcaProject (path to the SIMCA project) and datasetName (name of the dataset of interest withion the SIMCA project).
+The beginning of the script resembles that of previous examples. First, we import libraries and then, within the main function, we use the argparse library to associate with variables the input parameters pathSimcaProject (path to the SIMCA project) and datasetName (name of the dataset of interest withion the SIMCA project).
 
 ```
 from win32com import client as win32
@@ -26,7 +26,7 @@ if __name__ == '__main__':
     datasetName = args["dataset"]
 ```
 
-We then connect to the SIMCA-Q interface and create the *Project* object that loads the SIMCA project:
+We then connect to the SIMCA-Q interface and create the *IProject* object that loads the SIMCA project:
 ```
 #Connect to the SIMCA-Q COM interface
 try:
@@ -40,7 +40,7 @@ except:
 project = simcaq.OpenProject(pathSimcaProject, "")
 ```
 
-We iterate over the total number of datasets within the SIMCA project, which we get by using the *Project* method *GetNumberOfDatasets()*. The iteration variable accounts for the dataset index, and within each iteration we can get the dataset number associated with the corresponding index by invoking the *Project* method *GetDatasetNumberFromIndex(dataset_index)*. Then, we can call the *Dataset* interface and load the corresponding dataset by means of the *Project* method *project.GetDataset(dataset_of_interest_number)*. Once this is done, we can retrieve the name of the dataset by calling the *Dataset* method *GetDataSetName()*. If the retrieved dataset name coincides with that passed as an input parameter to the script, we leave the iteration and continue with the latest *Dataset* object. The code will look like:
+We iterate over the total number of datasets within the SIMCA project, which we get by using the *IProject* method *GetNumberOfDatasets()*. The iteration variable accounts for the dataset index, and within each iteration we can get the dataset number associated with the corresponding index by invoking the *IProject* method *GetDatasetNumberFromIndex(dataset_index)*. Then, we can call the *Dataset* interface and load the corresponding dataset by means of the *IProject* method *project.GetDataset(dataset_of_interest_number)*. Once this is done, we can retrieve the name of the dataset by calling the *Dataset* method *GetDataSetName()*. If the retrieved dataset name coincides with that passed as an input parameter to the script, we leave the iteration and continue with the latest *IDataset* object. The code will look like:
 ```
 #Retrieve the number of datasets in the SIMCA project
 number_datasets = project.GetNumberOfDatasets() 
@@ -68,7 +68,7 @@ for dataset_index in range(1, number_datasets+1):
         break
 ```
 
-We can then retireve the number of observation IDs with the *Dataset* method *dataset.GetNumberOfObservationIDs()* and their names with the *Dataset* method *GetDataSetObservationIDName(i)* that receives as a parameter the observation ID index:
+We can then retireve the number of observation IDs with the *IDataset* method *dataset.GetNumberOfObservationIDs()* and their names with the *IDataset* method *GetDataSetObservationIDName(i)* that receives as a parameter the observation ID index:
 ```
 # Number of observation IDs in the dataset
 n_observation_ids = dataset.GetNumberOfObservationIDs()
@@ -101,6 +101,32 @@ for i in range(1,n_observation_ids+1):
     for observation_index in range(1,obs_names.GetSize()+1):
         temporal_list_observation_names.append(obs_names.GetData(observation_index))
     observation_names.append(temporal_list_observation_names)
+```
+
+SIMCA-Q allows several ways of retrieving the names of the observations and variables. Once that also allows retrieveing the specific value of each variable for each observation is the *Dataset* method *GetDataSetObservations()*. If we pass *None* as a parameter, this method retireves variable values for all observations in the dataset. The output of *GetDataSetObservations()* is a *IVectorData* object. *IVectorData* objects have several methods that we can use in our script:
+- *GetColumnNames()*: returns a *IStringVector* object that we can use to find the number and name of the dataset observations. Specifically, we can get the number of observations by subsequently calling the *StringVector* method *GetSize()* and the name of the observations by calling the *StringVector* method *GetData(i)* that receives as a parameter the observation index.
+- *GetRowNames()*: returns a *IStringVector* object that we can use to find the number and name of the dataset variables. Specifically, we can get the number of variables by subsequently calling the *StringVector* method *GetSize()* and the name of the variables by calling the *StringVector* method *GetData(i)* that receives as a parameter the observation index.
+- *GetDataMatrix()*: this method allows retrieving the variable values for each observation. Specifically, it returns a *IFloatMatrix* object. Then, this *IFloatMatrix* object allows using the *GetData(iVar,iObs)* method, which returns the variable value for a specific index.
+
+```
+observations = dataset.GetDataSetObservations(None)
+
+observation_labels = []
+variable_labels = []
+    
+for iObs in range(1,observations.GetColumnNames().GetSize()+1):
+    observation_labels.append(observations.GetColumnNames().GetData(iObs))
+
+for iVar in range(1,observations.GetRowNames().GetSize()+1):
+    variable_labels.append(observations.GetRowNames().GetData(iVar))
+
+dataset_values = []
+
+for iObs in range(1,observations.GetColumnNames().GetSize()+1):
+    data_specific_observation = []
+    for iVar in range(1,observations.GetRowNames().GetSize()+1):
+        data_specific_observation.append(observations.GetDataMatrix().GetData(iVar,iObs))
+    dataset_values.append(data_specific_observation)    
 ```
 
 
