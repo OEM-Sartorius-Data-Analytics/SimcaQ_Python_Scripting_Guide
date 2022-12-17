@@ -30,8 +30,7 @@ We then connect to the SIMCA-Q interface and create the *IProject* object that l
 ```
 #Connect to the SIMCA-Q COM interface
 try:
-    #simcaq = win32.Dispatch('Umetrics.SIMCAQ')
-    simcaq = win32.gencache.EnsureDispatch('Umetrics.SIMCAQ')
+    simcaq = win32.Dispatch('Umetrics.SIMCAQ')
 except:
     print('Could not connect to SIMCA-Q.')
     raise SystemExit
@@ -135,6 +134,8 @@ myVector = simcaq.GetNewIntVector(1)
 myVector.SetData(1,observation_number) # where observation_number is an integer
 observations = dataset.GetDataSetObservations(myVector)
 ```
+
+We can now export all this information to a (in this case csv) file. For our example script we can do it by:
 
 
 
