@@ -68,6 +68,21 @@ for dataset_index in range(1, number_datasets+1):
         break
 ```
 
+We can then retireve the number of observation IDs with the *Dataset* method *dataset.GetNumberOfObservationIDs()* and their names with the *Dataset* method *GetDataSetObservationIDName(i)* that receives as a parameter the observation ID index:
+```
+# Number of observation IDs in the dataset
+n_observation_ids = dataset.GetNumberOfObservationIDs()
+
+# List that will contain te names for the observation IDs
+observation_ID_names = []
+        
+# Populating the list with the names of the observation IDs
+for i in range(1,n_observation_ids+1):
+
+    observation_ID_names.append(dataset.GetDataSetObservationIDName(i))
+```
+
+
 
 
 ![train dataset](Dataset_Images/DatasetTrainset.png)
