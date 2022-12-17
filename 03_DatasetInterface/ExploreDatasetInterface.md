@@ -129,6 +129,13 @@ for iObs in range(1,observations.GetColumnNames().GetSize()+1):
     dataset_values.append(data_specific_observation)    
 ```
 
+If we would like to retieve the variable values for a specific observation, we can do it by using the *IIntVector* interface. Specifically, we can create an *IIntVector* object, use its method *SetData()* to specify the observation we are interested in, use this *IIntVector* object as an input parameter for the *IDataset* method *GetDataSetObservations()* and then proceed as in the above example:
+```
+myVector = simcaq.GetNewIntVector(1)
+myVector.SetData(1,observation_number) # where observation_number is an integer
+observations = dataset.GetDataSetObservations(myVector)
+```
+
 
 
 
