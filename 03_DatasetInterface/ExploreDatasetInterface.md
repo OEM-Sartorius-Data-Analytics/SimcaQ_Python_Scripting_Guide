@@ -154,9 +154,7 @@ And then doing the export with the following code:
             for j in range(len(observation_names)):
                 row.append(observation_names[j][i])
             for k in range(len(variable_labels)):
-                print(k)
-                row.append(dataset_values[i][k])
-            
+                row.append(dataset_values[i][k])            
             writer.writerow(row)
 ```
 
@@ -264,7 +262,6 @@ if __name__ == '__main__':
             for j in range(len(observation_names)):
                 row.append(observation_names[j][i])
             for k in range(len(variable_labels)):
-                row.append(dataset_values[i][k])
-            
+                row.append(dataset_values[i][k])            
             writer.writerow(row)
 ```

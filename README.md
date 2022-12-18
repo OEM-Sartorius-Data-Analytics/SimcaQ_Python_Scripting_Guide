@@ -12,7 +12,7 @@ python -m pip install -r requirements.txt
 ## Index
 
 - [Access the COM interface & check your license](00_COM_and_License/COM_and_License.md).
-- [The Project Interface](01_ProjectInterface/ExploreProjectInterface.md).
-- [The ModelInfo Interface](02_ModelInfoInterface/ExploreModelInfoInterface.md).
-- [The Dataset Interface](03_DatasetInterface/ExploreDatasetInterface.md).
-- [The Model Interface: Introduction](04_ModelInterface_0/ModelInterface_Introduction.md).
+- [The IProject Interface](01_ProjectInterface/ExploreProjectInterface.md).
+- [The IModelInfo Interface](02_ModelInfoInterface/ExploreModelInfoInterface.md).
+- [The IDataset Interface: accessing datasets in SIMCA projects](03_DatasetInterface/ExploreDatasetInterface.md).
+- [The IModel Interface: Introduction](04_ModelInterface_0/ModelInterface_Introduction.md).
