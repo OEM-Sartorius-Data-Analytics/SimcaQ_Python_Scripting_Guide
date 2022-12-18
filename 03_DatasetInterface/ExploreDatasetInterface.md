@@ -264,7 +264,6 @@ if __name__ == '__main__':
             for j in range(len(observation_names)):
                 row.append(observation_names[j][i])
             for k in range(len(variable_labels)):
-                print(k)
                 row.append(dataset_values[i][k])
             
             writer.writerow(row)
