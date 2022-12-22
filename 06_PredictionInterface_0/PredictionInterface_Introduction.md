@@ -1,0 +1,64 @@
+# Perform Predictions: The IPreparePrediction and IPrediction Interfaces
+
+In SIMCA-Q, predictions can be inferred by combining the *IPreparePrediction* and the *IPrediction* interfaces. The first step is to use the *IModel* interface to generate a *IPreparePrediction* prediction object. *PreparePrediction* objects are then 1) populated with the data from where quantities will be predicted and 2) subsequently used to create a *IPrediction* object. *IPrediction* objects can then be used to obtain the desired predicted quantities.
+
+Let's say that we have a *IModel* object named *oModel*. We can use it to create a *IPreparePrediction* object, let's name it oPrepPred, by using the *IModel* method *PreparePrediction()*:
+```
+oPrepPred = oModel.PreparePrediction()
+```
+
+*IPreparePrediction* offers the method *GetVariablesForPrediction()*, which returns a *IVariableVector* object that we can subsequently use to obtain the number of variables needed for doing the prediction, by using the *GetSize()* method, as well as the name of these variables, by using the *GetVariable()* method (which recveives as an input parameter the index of the variable of interest. Specifically, *GetVariable()* will return a *IVariable* object that can provide the variable name by invoking the *GetName()* method:
+```
+predictionVariables = oPrepPred.GetVariablesForPrediction()
+numberPredictionVariables = predictionVariables.GetSize()
+
+indexVariableOfInterest = 1;
+variableOfInterestForPrediction = predictionVariables.GetVariable(indexVariableOfInterest)
+nameVariableOfInterestForPrediction = variableOfInterestForPrediction.GetName(1)
+```
+
+These methods can be extremly important when preparing a prediction as we will see below.
+
+The next step would be to populate the *IPreparePrediction* object with the input data from where predictions will be made. For this, *IPreparePrediction* offers a variety of methods. Here, we will focus on *SetQuantitativeData()* that, unsurprisingly, is used when the input data is of qualitative nature. *SetQuantitativeData()* receives as input parameters two integers, the first one accounting for the observation number (several observations can be used for prediction simultaneously) and the second one accounting for the variable number.
+
+In the simple case where all variables are used for prediction, and where the input data is in the shape of e.g., a 2D python list, let's name it *inputData* , we could populate the *IPreparePrediction* object by:
+
+```
+for var in range(1,numberOfVariables+):
+    for obs in range(1,numberOfObservations+):
+        oPrepPred.SetQuantitativeData(obs, var, inputData[obs][var])
+```
+
+However, in many cases this will be a buggy approach. For prediction, SIMCA-Q requires only the data of the variables used for building the model, but it _requires that they are provided in the correct order_. And the order is that of the dataset used to build the model. It is not uncommon that datasets include Y variables before the X variables, and even that not all X variables are used to build the model. Even if this is not explicit, it can happen e.g., when the derivates of the data are used instead of the original data. While SIMCA-Q will automatically apply the same preprocessing to the data that was used to build the model, derivating leaves out of the model building the first and last variables.
+
+If you know in advance the structure of your dataset, you can hardcode the script in order to place the input data in the correct positions. However, if this is not the case i.e., if you do not know in advance the structure of the dataset you can do the following. Basically, a dictionary (NameLookup) is created with the names of the variables used to build the models as keys, as well as their position. Then we can iterate over the data lists for prediction, and only provided SIMCA-Q with the variables whose names coincide with those used to build the specific model, and also in the correct order:
+```
+variableVector = prepPred.GetVariablesForPrediction()
+    variables_vec = [variableVector.GetVariable(i+1).GetName(1) for i in range(variableVector.GetSize())]
+    NameLookup = {name: ix+1 for ix, name in enumerate(variables_vec)}
+
+    for i, name in enumerate(test_variable_names):
+        if name in NameLookup:
+            oPrepPred.SetQuantitativeData(1, NameLookup[name], test_variable_data[i])
+```
+
+Once we have feed SIMCA-Q with the correct data and in the correct order, we can access the *IPrediction* interface:
+```
+oPrediction = oPrepPred.GetPrediction()
+```
+
+and then:
+```
+numPredictiveScores = model.GetNumberOfPredictiveComponents()
+
+    # Create a prediction vector according to SIMCA-Q requirements
+    # for retrieving prediction parameters afterwards
+    predictionVector = simcaq.GetNewIntVector(1)
+    predictionVector.SetData(1, 1)
+
+    # Retrieve and print predicted y
+    resultData = prediction.GetYPredPS(numPredictiveScores,True,True,predictionVector)
+    predictionDataMatrix = resultData.GetDataMatrix()
+    predictedY = predictionDataMatrix.GetData(1,1)
+```
+
