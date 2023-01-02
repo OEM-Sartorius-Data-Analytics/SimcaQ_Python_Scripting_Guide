@@ -19,7 +19,8 @@ if __name__ == '__main__':
 
     #Connect to the SIMCA-Q COM interface
     try:
-        simcaq = win32.Dispatch('Umetrics.SIMCAQ')
+        # simcaq = win32.Dispatch('Umetrics.SIMCAQ')
+        simcaq = win32.gencache.EnsureDispatch('Umetrics.SIMCAQ')
     except:
         print('Could not connect to SIMCA-Q.')
         raise SystemExit
@@ -77,38 +78,51 @@ if __name__ == '__main__':
     scoresVectorData = model.GetT(None)
     print(scoresVectorData)
 
-    
-
-    #sizeNamesColumnsScoresVectorData = namesColumnsScoresVectorData.GetSize()
 
     
+    # IStringVector to retrieve the names of observations
+    # for which scores were retrieved:
+    observationNamesScoresVectorData = scoresVectorData.GetRowNames()
+    # Number of observations for which the scores have been retrieved:
+    numberObservationNamesScoresVectorData = observationNamesScoresVectorData.GetSize()
+    # Retrieve and print the names of the observations for which the scores were retrieved:
+    for iObs in range(1,numberObservationNamesScoresVectorData+1):
+        print(observationNamesScoresVectorData.GetData(iObs))
 
-    #sizeNamesRowsScoresVectorData = namesRowsScoresVectorData.GetSize() 
+
+    
+
+    # IStringVector to retrieve the score labels
+    labelsScoresVectorData = scoresVectorData.GetColumnNames()
+    # Number of Scores
+    numberLabelsScoresVectorData = labelsScoresVectorData.GetSize()
+    # Retrieve and print the score labels
+    for iScore in range(1,numberLabelsScoresVectorData+1):
+        print(labelsScoresVectorData.GetData(iScore))
 
     scoresDatamatrix = scoresVectorData.GetDataMatrix()
-    print(scoresDatamatrix)
+    iObs = 8
+    iComponent = 1
+    print(scoresDatamatrix.GetData(iObs,iComponent))
 
-    namesColumnsScoresVectorData = scoresVectorData.GetColumnNames()
-    namesRowsScoresVectorData = scoresVectorData.GetRowNames()
-
-    scoresDatamatrixNumberRows = scoresDatamatrix.GetNumberOfRows()
-    scoresDatamatrixNumberColumns = scoresDatamatrix.GetNumberOfCols()    
+    iScoreX = 1
+    iScoreY = 2
 
     df = pd.DataFrame(columns=[
-        namesColumnsScoresVectorData.GetData(1),
-        namesColumnsScoresVectorData.GetData(2)
+        labelsScoresVectorData.GetData(iScoreX),
+        labelsScoresVectorData.GetData(iScoreY)
     ])
 
-    for col in range(scoresDatamatrixNumberColumns):
-        for row in range(scoresDatamatrixNumberRows):
+    for col in range(numberLabelsScoresVectorData):
+        for row in range(numberObservationNamesScoresVectorData):
             df.at[
-                namesRowsScoresVectorData.GetData(row+1),
-                namesColumnsScoresVectorData.GetData(col+1)
+                observationNamesScoresVectorData.GetData(row+1),
+                labelsScoresVectorData.GetData(col+1)
             ] = scoresDatamatrix.GetData(row+1,col+1)
 
     df.plot(kind = 'scatter',
-            x = namesColumnsScoresVectorData.GetData(1),
-            y = namesColumnsScoresVectorData.GetData(2)
+            x = labelsScoresVectorData.GetData(iScoreX),
+            y = labelsScoresVectorData.GetData(iScoreY)
             )
 
     plt.show()

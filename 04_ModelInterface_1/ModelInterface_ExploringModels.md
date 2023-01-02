@@ -73,7 +73,9 @@ if __name__ == '__main__':
         raise SystemExit
 ```
 
-We can now use the *IModel* method *GetT()* to retrieve the T matrix from the mode i.e., the scroe vector for each of the model dimensions. *GetT()* receives as input parameters an *IIntVector* object indicating the indices of the components to retrieve. However, if we pass *None* we retrieve all components:
+## Scores
+
+We can now use the *IModel* method *GetT()* to retrieve the T matrix from the mode i.e., the score vector for each of the model dimensions. *GetT()* receives as input parameters an *IIntVector* object indicating the indices of the components to retrieve. However, if we pass *None* we retrieve all components:
 ```
 scoresVectorData = model.GetT(None)
 ```
@@ -82,20 +84,54 @@ which is equivalent to:
 ```
 numComponents = model.GetNumberOfComponents()
 
-    componentVector = simcaq.GetNewIntVector(numComponents)
+componentVector = simcaq.GetNewIntVector(numComponents)
 
-    for i in range(1,numComponents+1):
-        componentVector.SetData(i,i)
+for i in range(1,numComponents+1):
+    componentVector.SetData(i,i)
 
-    scoresVectorData = model.GetT(componentVector)
+scoresVectorData = model.GetT(componentVector)
 ```
 
-The *GetT()* method returns a *IVectorData* object. To retrieve the actual score values we need then to call the *IVectorData* method *GetDataMatrix()* which will return an *IFloatMatrix* object:
+The *GetT()* method returns a *IVectorData* object. From this object we can retrieve not only the score values, but also the names of the observations for which scores have been retrieved as well as the names of the model components that were retrieved.
+
+To retrieve the observation names we first call the *IVectorData* method *GetRowNames()*, which returns an *IStringVector*:
+```
+observationNamesScoresVectorData = scoresVectorData.GetRowNames()
+```
+
+we can now retrieve the number of observations by:
+```
+numberObservationNamesScoresVectorData = observationNamesScoresVectorData.GetSize()
+```
+
+and e.g., retrieve and print to the console all observation names by:
+```
+for iObs in range(1,numberObservationNamesScoresVectorData+1):
+    print(observationNamesScoresVectorData.GetData(iObs))
+```
+
+An analogous proccess can be used to retrieve the names of the components for which scores were retrieved, just note that in this case the *IVectorData* *GetColumnNames()* function must be used instead:
+```
+# IStringVector to retrieve the score labels
+labelsScoresVectorData = scoresVectorData.GetColumnNames()
+# Number of Scores
+numberLabelsScoresVectorData = labelsScoresVectorData.GetSize()
+# Retrieve and print the score labels
+for iScore in range(1,numberLabelsScoresVectorData+1):
+    print(labelsScoresVectorData.GetData(iScore))
+```
+
+To retrieve the actual score values from the *IVectorData* object *scoresVectorData* we need to call the *IVectorData* method *GetDataMatrix()* which will return an *IFloatMatrix* object:
 ```
 scoresDatamatrix = scoresVectorData.GetDataMatrix()
 ```
 
-From here we can use the *IFloatMatrix* method *GetData()*, which receives as input ...
+From here we can use the *IFloatMatrix* method *GetData()*, which receives as inputs 1) the observation number and 2) the component number for which we want to retrieve the score value. For instance, to retrieve the score for the second component of the eight observation:
+```
+iObs = 8
+iComponent = 1
+scoreValue = scoresDatamatrix.GetData(iObs,iComponent)
+```
 
 We can finally plot the score matrix e.g., by using the pandas and matplotlib modules:
 ```
