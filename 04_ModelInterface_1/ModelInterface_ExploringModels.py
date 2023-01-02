@@ -63,6 +63,59 @@ if __name__ == '__main__':
         print('Could not find the specified model')
         raise SystemExit
 
+    ############################################################
+    ################ SUMMARY OF FIT PARAMETERS
+    ############################################################
+
+    
+    # Retrieve IVectorData object to handle Q2(cum)
+    q2cum = model.GetQ2Cum()
+    # Retrieve IStringVector object to handle names of components used
+    # for calculating Q2(cum)
+    q2cum_ComponentNames = q2cum.GetRowNames()
+    # Retrieve number of components used for calculating Q2(cum)
+    numberComponentsQ2Cum = q2cum_ComponentNames.GetSize()
+    # Populate an array with the names of the components used for
+    # calculating Q2(cum)
+    q2cum_ComponentNamesArray = []
+    for iComponent in range(1,numberComponentsQ2Cum+1):
+        q2cum_ComponentNamesArray.append(q2cum_ComponentNames.GetData(iComponent))
+    # Retrieve IFloatMatrix object to handle Q2(cum) values    
+    q2cum_DataMatrix = q2cum.GetDataMatrix()
+    # Populate an array with the values of Q2(cum) for each component    
+    q2cum_DataArray = []
+    for iComp in range(1,numberComponentsQ2Cum+1):
+        q2cum_DataArray.append(q2cum_DataMatrix.GetData(iComp,1))
+    
+
+    # Retrieve IVectorData object to handle R2X(cum)
+    r2xcum = model.GetR2XCum()
+    # Retrieve IStringVector object to handle names of components used
+    # for calculating R2X(cum)
+    r2xcum_ComponentNames = r2xcum.GetRowNames()
+    # Retrieve number of components used for calculating R2X(cum)
+    numberComponentsR2XCum = r2xcum_ComponentNames.GetSize()
+    # Populate an array with the names of the components used for
+    # calculating R2X(cum)
+    r2xcum_ComponentNamesArray = []
+    for iComponent in range(1,numberComponentsR2XCum+1):
+        r2xcum_ComponentNamesArray.append(r2xcum_ComponentNames.GetData(iComponent))
+    # Retrieve IFloatMatrix object to handle R2X(cum) values    
+    r2xcum_DataMatrix = r2xcum.GetDataMatrix()
+    # Populate an array with the values of R2X(cum) for each component    
+    r2xcum_DataArray = []
+    for iComp in range(1,numberComponentsR2XCum+1):
+        r2xcum_DataArray.append(r2xcum_DataMatrix.GetData(iComp,1))
+
+
+    ############################################################
+    ################ SCORES
+    ############################################################
+    
+    # Retrieve an IVectorData object to handle scores for all model dimensions
+    scoresVectorData = model.GetT(None)
+
+    #A different way to do it passing an IIntVector as input parameter
     """
     numComponents = model.GetNumberOfComponents()
 
@@ -73,12 +126,6 @@ if __name__ == '__main__':
 
     scoresVectorData = model.GetT(componentVector)
     """
-
-    #Retrieve the scores for all model dimensions
-    scoresVectorData = model.GetT(None)
-    print(scoresVectorData)
-
-
     
     # IStringVector to retrieve the names of observations
     # for which scores were retrieved:
@@ -87,9 +134,8 @@ if __name__ == '__main__':
     numberObservationNamesScoresVectorData = observationNamesScoresVectorData.GetSize()
     # Retrieve and print the names of the observations for which the scores were retrieved:
     for iObs in range(1,numberObservationNamesScoresVectorData+1):
-        print(observationNamesScoresVectorData.GetData(iObs))
-
-
+        #print(observationNamesScoresVectorData.GetData(iObs))
+        pass
     
 
     # IStringVector to retrieve the score labels
@@ -98,12 +144,14 @@ if __name__ == '__main__':
     numberLabelsScoresVectorData = labelsScoresVectorData.GetSize()
     # Retrieve and print the score labels
     for iScore in range(1,numberLabelsScoresVectorData+1):
-        print(labelsScoresVectorData.GetData(iScore))
+        #print(labelsScoresVectorData.GetData(iScore))
+        pass
 
+    # IFloatMatrix to retrieve score values
     scoresDatamatrix = scoresVectorData.GetDataMatrix()
     iObs = 8
     iComponent = 1
-    print(scoresDatamatrix.GetData(iObs,iComponent))
+    #print(scoresDatamatrix.GetData(iObs,iComponent))
 
     iScoreX = 1
     iScoreY = 2

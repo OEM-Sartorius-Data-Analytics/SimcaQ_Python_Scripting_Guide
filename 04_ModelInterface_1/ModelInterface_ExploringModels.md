@@ -73,6 +73,67 @@ if __name__ == '__main__':
         raise SystemExit
 ```
 
+## Summary of Fit Parameters
+
+You can use the *IModel* interface to e.g., retrieve parameters that summarize the quality of the fit like R2(cum) and Q2(cum).
+
+To obtain Q2(cum) values, start by invoking the *GetQ2Cum()* method:
+```
+q2cum = model.GetQ2Cum()
+```
+
+This returns an *IVectorData* object that we can use to retrieve the *cumulative Q2* of the different components of the model. We can actually get the names of each of these components. The first step would be to use the *GetRowNames()* method to retrieve a handle (an *IStringVector* object) to these names:
+```
+q2cum_ComponentNames = q2cum.GetRowNames()
+```
+
+We can then get the number of components by:
+```
+numberComponentsQ2Cum = q2cum_ComponentNames.GetSize()
+```
+
+and retrieve the actual component name by invoking the 'GetData()* method that takes as an input parameter the index of the desired component. For instance, in the example below a list is populated with the component names:
+```
+q2cum_ComponentNamesArray = []
+for i in range(1,numberComponentsQ2Cum+1):
+    q2cum_ComponentNamesArray.append(q2cum_ComponentNames.GetData(i))
+```
+
+Finally, we can get the actual *cumulative Q2* values first by invoking the *IVectorData* method *GetDataMatrix()*, which returns an *IFloatMatrix* object:
+```
+q2cum_DataMatrix = q2cum.GetDataMatrix()
+```
+
+This object allows then retrieving the actual *cumulative Q2* values for all components by invoking the *GetData()* method which takes as input parameters the indices of the component and of the parameter that we want to retrieve (always 1 as there is only one parameter: Q2(cum)). For instance, to retrieve all values within a list:
+```
+q2cum_DataArray = []
+for iComp in range(1,numberComponentsQ2Cum+1):
+    q2cum_DataArray.append(q2cum_DataMatrix.GetData(iComp,1))
+```
+
+We can use exactly the same approach to retrieve e.g. R2X(cum) labels and values:
+```
+# Retrieve IVectorData object to handle R2X(cum)
+r2xcum = model.GetR2XCum()
+# Retrieve IStringVector object to handle names of components used
+# for calculating R2X(cum)
+r2xcum_ComponentNames = r2xcum.GetRowNames()
+# Retrieve number of components used for calculating R2X(cum)
+numberComponentsR2XCum = r2xcum_ComponentNames.GetSize()
+# Populate an array with the names of the components used for
+# calculating R2X(cum)
+r2xcum_ComponentNamesArray = []
+for iComponent in range(1,numberComponentsR2XCum+1):
+    r2xcum_ComponentNamesArray.append(r2xcum_ComponentNames.GetData(iComponent))
+# Retrieve IFloatMatrix object to handle R2X(cum) values    
+r2xcum_DataMatrix = r2xcum.GetDataMatrix()
+# Populate an array with the values of R2X(cum) for each component    
+r2xcum_DataArray = []
+for iComp in range(1,numberComponentsR2XCum+1):
+    r2xcum_DataArray.append(r2xcum_DataMatrix.GetData(iComp,1))
+
+```
+
 ## Scores
 
 We can now use the *IModel* method *GetT()* to retrieve the T matrix from the mode i.e., the score vector for each of the model dimensions. *GetT()* receives as input parameters an *IIntVector* object indicating the indices of the components to retrieve. However, if we pass *None* we retrieve all components:
