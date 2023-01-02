@@ -245,3 +245,27 @@ namesVariablesLoadingsVectorData = []
 for iVar in range(1,numberVariablesLoadingsVectorData+1):
     namesVariablesLoadingsVectorData.append(variablesLoadingsVectorData.GetData(iVar))
 ```
+
+We can follow a similar approach to get the number and names of the components:
+```
+# IStringVector object to handle the name of components
+componentsLoadingsVectorData = loadingsVectorData.GetColumnNames()    
+# Number of components
+numberComponentsLoadingsVectorData = componentsLoadingsVectorData.GetSize()
+# Populate an array with the names of components
+namesComponentsLoadingsVectorData = []
+for iComp in range(1,numberComponentsLoadingsVectorData+1):
+    namesComponentsLoadingsVectorData.append(componentsLoadingsVectorData.GetData(iComp))
+```
+
+To retrieve the actual loading values from the *IVectorData* object *loadingsVectorData* we need to call the *IVectorData* method *GetDataMatrix()* which will return an *IFloatMatrix* object:
+```
+loadingsDataMatrix = loadingsVectorData.GetDataMatrix()
+```
+
+From here we can use the *IFloatMatrix* method *GetData()*, which receives as inputs 1) the variable number and 2) the component number for which we want to retrieve the loading value. For instance, to retrieve the score for variable 47 and component 1:
+```
+iVar = 47
+iComp =1
+loadingValue = loadingsDataMatrix.GetData(iVar,iComp)
+```

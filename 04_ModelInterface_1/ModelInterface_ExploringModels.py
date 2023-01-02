@@ -147,7 +147,7 @@ if __name__ == '__main__':
         #print(labelsScoresVectorData.GetData(iScore))
         pass
 
-    # IFloatMatrix to retrieve score values
+    # IFloatMatrix to handle score values
     scoresDatamatrix = scoresVectorData.GetDataMatrix()
     iObs = 8
     iComponent = 1
@@ -183,38 +183,28 @@ if __name__ == '__main__':
     # IVectorData object to handle loadings
     loadingsVectorData = model.GetP(None,isWaveletCompressed)
 
-    print(loadingsVectorData)
-
     # IStringVector object to handle the name of variables
     variablesLoadingsVectorData = loadingsVectorData.GetRowNames()
-
-    # IStringVector object to handle the name of components
-    componentsLoadingsVectorData = loadingsVectorData.GetColumnNames()
-
-    print(variablesLoadingsVectorData)
-    print(componentsLoadingsVectorData)
-
     # Number of variables
     numberVariablesLoadingsVectorData = variablesLoadingsVectorData.GetSize()
-
-    # Number of components
-    numberComponentsLoadingsVectorData = componentsLoadingsVectorData.GetSize()
-
-    print('numberVariablesLoadingsVectorData ',numberVariablesLoadingsVectorData)
-    print('numberComponentsLoadingsVectorData ',numberComponentsLoadingsVectorData)
-
     # Populate an array with the names of variables
     namesVariablesLoadingsVectorData = []
     for iVar in range(1,numberVariablesLoadingsVectorData+1):
         namesVariablesLoadingsVectorData.append(variablesLoadingsVectorData.GetData(iVar))
 
+
+    # IStringVector object to handle the name of components
+    componentsLoadingsVectorData = loadingsVectorData.GetColumnNames()    
+    # Number of components
+    numberComponentsLoadingsVectorData = componentsLoadingsVectorData.GetSize()
     # Populate an array with the names of components
     namesComponentsLoadingsVectorData = []
     for iComp in range(1,numberComponentsLoadingsVectorData+1):
         namesComponentsLoadingsVectorData.append(componentsLoadingsVectorData.GetData(iComp))
 
+    # IFloatMatrix to handle loading values
     loadingsDataMatrix = loadingsVectorData.GetDataMatrix()
-
+    # Retrieve loading value
     iVar = 47
     iComp =1
     loadingValue = loadingsDataMatrix.GetData(iVar,iComp)
