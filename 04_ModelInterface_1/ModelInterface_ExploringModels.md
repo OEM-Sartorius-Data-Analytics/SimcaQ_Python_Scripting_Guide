@@ -221,3 +221,27 @@ df.plot(kind = 'scatter',
 
 plt.show()
 ```
+
+## Loadings
+
+The SIMCA-Q proccess to get the loadings of a model is similar to that to get the scores. However, in this case we will use the *IModel* method *GetP()* instead. This method receives as input parameters 1) an *IIntVector* object indicating the indices of the components to retrieve or *None* if we want to retrieve all components, and 2) a boolean variable indicating if the project is a wavelet spectral compressed project. In the case it is not and also that we want to retrieve loadings for all components:
+```
+loadingsVectorData = model.GetP(None,False)
+```
+
+From this object we can retrieve an IStringVector object to handle the name of variables:
+```
+variablesLoadingsVectorData = loadingsVectorData.GetRowNames()
+```
+
+We can get the number of variables with the *GetSize()* method:
+```
+numberVariablesLoadingsVectorData = variablesLoadingsVectorData.GetSize()
+```
+
+And the name of these variables with the *GetData()* method that receives as an input parameter the variable index. For example, to populate a list with the variable names:
+```
+namesVariablesLoadingsVectorData = []
+for iVar in range(1,numberVariablesLoadingsVectorData+1):
+    namesVariablesLoadingsVectorData.append(variablesLoadingsVectorData.GetData(iVar))
+```
