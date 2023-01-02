@@ -17,4 +17,5 @@ python -m pip install -r requirements.txt
 - [The IDataset Interface: accessing datasets in SIMCA projects](03_DatasetInterface/ExploreDatasetInterface.md).
 - [The IModel Interface: Introduction](04_ModelInterface_0/ModelInterface_Introduction.md).
 - [Exploring the IModel Interface: Getting the Score Plot from models](05_ModelInterface_ScorePlot/ModelInterface_ExampleScorePlot.md).
+- [The IModel Interface: Exploring Models](04_ModelInterface_1/ModelInterface_ExploringModels.md).
 - [# Perform Predictions: The IPreparePrediction and IPrediction Interfaces](06_PredictionInterface_0/PredictionInterface_Introduction.md).
