@@ -209,6 +209,47 @@ if __name__ == '__main__':
     iComp =1
     loadingValue = loadingsDataMatrix.GetData(iVar,iComp)
 
-    print(loadingValue)
+    #print(loadingValue)
+
+    ############################################################
+    ################ CONTRIBUTIONS
+    ############################################################
+
+    reference = 0 # average
+    iObservation = 1
+    eWeight = 2
+    nComponent = 1
+    nYVar = 1
+    bReconstruct = False
+    contribution = model.GetContributionsScoresSingleWeight(reference,
+                                                            iObservation,
+                                                            eWeight,
+                                                            nComponent,
+                                                            nYVar,
+                                                            bReconstruct)
+    print(contribution)
+    print(contribution.GetRowNames().GetSize())
+    print(contribution.GetColumnNames().GetSize())
+    rowNames = contribution.GetRowNames()
+    numberRowNames = rowNames.GetSize()
+    for i in range(1,numberRowNames+1):
+        print(rowNames.GetData(i))
+
+    nComponent = 2
+    contribution = model.GetContributionsScoresSingleWeight(reference,
+                                                            iObservation,
+                                                            eWeight,
+                                                            nComponent,
+                                                            nYVar,
+                                                            bReconstruct)
+    #print(contribution)
+    #print(contribution.GetRowNames().GetSize())
+    #print(contribution.GetColumnNames().GetSize())
+    rowNames = contribution.GetRowNames()
+    numberRowNames = rowNames.GetSize()
+    for i in range(1,numberRowNames+1):
+        print(rowNames.GetData(i))
+
+
                                                 
     
