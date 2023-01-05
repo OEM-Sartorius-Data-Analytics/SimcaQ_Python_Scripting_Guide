@@ -3,13 +3,18 @@ import argparse
 
 if __name__ == '__main__':
 
-    # Retrieve the name of the SIMCA project passed as a parameter
-    # when calling the python script
+    # Retrieve the name of the SIMCA project and of the model name passed as
+    # parameters when calling the python script
     ap = argparse.ArgumentParser()
     ap.add_argument("-p", "--project", required=True, help="Path to the SIMCA project")
+    ap.add_argument("-m", "--model", required=True, help="model name")
     args = vars(ap.parse_args())
-    PathSimcaProject = args["project"]
+    pathSimcaProject = args["project"]
+    modelName = args["model"]
     
+    # Boolean variable to determine if the model has been found
+    modelFound = False
+
     #Connect to the SIMCA-Q COM interface
     try:
         simcaq = win32.Dispatch('Umetrics.SIMCAQ')
@@ -19,14 +24,14 @@ if __name__ == '__main__':
 
     # Open the SIMCA project
     try:
-        project = simcaq.OpenProject(PathSimcaProject, "")
+        project = simcaq.OpenProject(pathSimcaProject, "")
     except:
         print('Could not open the project.')
-        raise SystemExit        
+        raise SystemExit
 
     #Retrieve the number of models in the SIMCA project
-    number_models = project.GetNumberOfModels()
-    
+    number_models = project.GetNumberOfModels() 
+
     # Iterate over indices of all project models
     for model_index in range(1, number_models+1):
 
@@ -38,16 +43,23 @@ if __name__ == '__main__':
         # for the specific model
         oModel = project.GetModel(model_of_interest_number)
 
-        # Retrieve the name and type of the model of interest
-        # from the ModelInfo object
+        # Retrieve the name of the model of interest
         model_of_interest_name = oModel.GetModelName()
-        model_of_interest_type_name = oModel.GetModelTypeString()
 
-        # and print the putput
-        print(f'For the model with index {model_index} and number {model_of_interest_number}:')
-        print(f'Name: {model_of_interest_name}')
-        print(f'Type: {model_of_interest_type_name}')
+        # Check if the model name coincides with that passed as an input
+        # parameter to the script
+        # If it coincides, we update the boolean variable modelFound
+        # and then exit the iteration
+        if model_of_interest_name == modelName:
+            modelFound = True
+            break
 
+        # If the model name passed as an input parameter was not found
+    # in the SIMCA project, we exit the script
+    if modelFound == False:
+        print('Could not fiund the specified model')
+        raise SystemExit
+        
     oPrepPred = oModel.PreparePrediction()
 
     print(oPrepPred.GetVariablesForPrediction())
@@ -57,9 +69,14 @@ if __name__ == '__main__':
     predictionVariables = oPrepPred.GetVariablesForPrediction()
     numberPredictionVariables = predictionVariables.GetSize()
 
+    for iPredictionVariable in range(1,numberPredictionVariables+1):
+        handleVariableOfInterestForPrediction = predictionVariables.GetVariable(iPredictionVariable)
+        print(handleVariableOfInterestForPrediction.GetName(1))
+    
+
     indexVariableOfInterest = 1;
-    variableOfInterestForPrediction = predictionVariables.GetVariable(indexVariableOfInterest)
-    nameVariableOfInterestForPrediction = variableOfInterestForPrediction.GetName(1)
+    #nameVariableOfInterestForPrediction = handleVariableOfInterestForPrediction.GetName(1)
+    
 
     print(nameVariableOfInterestForPrediction)
     
