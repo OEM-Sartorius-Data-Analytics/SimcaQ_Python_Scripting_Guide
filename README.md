@@ -1,6 +1,6 @@
 # SIMCA-Q Python Scripting Guide
 
-This guide provides examples on how to use Python to develope SIMCA-Q applications.
+This guide focuses through examples on how to use Python to develop SIMCA-Q applications.
 
 At present, Python only can interact with the SIMCA-Q COM interface. Therefore, these apps will only work on Windows systems.
 
