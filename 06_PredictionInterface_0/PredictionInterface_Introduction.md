@@ -2,6 +2,8 @@
 
 In SIMCA-Q, predictions can be inferred by combining the *IPreparePrediction* and the *IPrediction* interfaces. The first step is to use the *IModel* interface to generate a *IPreparePrediction* prediction object. *PreparePrediction* objects are then 1) populated with the data from where quantities will be predicted and 2) subsequently used to create a *IPrediction* object. *IPrediction* objects can then be used to obtain the desired predicted quantities.
 
+## IPreparePrediction Interface
+
 Let's say that we have a *IModel* object named *oModel*. We can use it to create a *IPreparePrediction* object, let's name it oPrepPred, by using the *IModel* method *PreparePrediction()*:
 ```
 oPrepPred = oModel.PreparePrediction()
@@ -45,12 +47,60 @@ for i, name in enumerate(test_variable_names):
             oPrepPred.SetQuantitativeData(iObs, NameLookup[name], prediction_data[iObs][i])
 ```
 
+## IPrediction Interface
+
 Once we have feed SIMCA-Q with the correct data and in the correct order, we can access the *IPrediction* interface, that will allow us to handle predicted data:
 ```
 oPrediction = oPrepPred.GetPrediction()
 ```
 
-and then:
+Once this object is created, we can inmediately access all predicted quantities.
+
+For instance, to retrieve the predicted scores we can use the *GetTPS()* method. This method receives as input parameters either *None*, if we want to retrieve the predicted scores for all the components of the model, or a *IntVector* object listing the desired components. For instance, to predict scores in all components:
+```
+oPrediction.GetTPS(None)
+```
+
+but to retrieve only the score for e.g., the first component:
+```
+# Create a prediction vector according to SIMCA-Q requirements
+# for retrieving prediction parameters afterwards
+predictionVector = simcaq.GetNewIntVector(1)
+predictionVector.SetData(1, 1)
+
+# Retrieve the score
+predictedScores = oPrediction.GetTPS(predictionVector)
+```
+
+In this example, *predictedScores* is a *VectorData* object. To retrieve the actual data we need first to retrieve a *FloatMatrix* object to handle this data:
+```
+predictedScoresDataMatrix = predictedScores.GetDataMatrix()
+```
+
+We can access the number of rows/observations of this data matrix by invoking the *GetNumberOfRows()* method and the number of columns/scores by invoking the *GetNumberOfColumns()* method. But, most improtantly, we can access the actual score values by invoking the *GetData()* method, which receives as input parameters the indices for observation and component of the scores that we want to retrieve. For instance, to retrieve the score for observation #1 and component #2:
+```
+iObs = 1
+iComp = 2
+value = predictedScoresDataMatrix.GetData(iObs, iComp)
+```
+
+We can follow a similar process to ontain other predicted quantities.
+
+For instance, to retrieve predicted DModX and DModX+ values we would use the *GetDModXPS()* and *GetDModXPSCombined()* methods respectively. These tow methods receive as input parameters 1) None if all components shopuld be used or a *IntVector* object listing the desired components (see above), 2) a boolean parameter indicating whether the results will be in units of standard deviation of the pooled RSD of the model (or absolute values in case of *False*), 3) a boolean parameter indicating whether the function will weight the residuals by the modeling power of the variables. Both of these functions will return *VectorData* objects, and the process to get the actual DModX and DModX+ would be similar to that detailed above for the predicted scores. For instance:
+```
+predictedGetDModX = oPrediction.GetDModXPS(None, True, True)
+predictedGetDModXPlus = oPrediction.GetDModXPSCombined(None, True, True)
+
+predictedGetDModXDataMatrix = predictedGetDModX.GetDataMatrix()
+predictedGetDModXPlusDataMatrix = predictedGetDModX.GetDataMatrix()
+
+iObs = 1
+iComp = 2
+valueDModX = predictedGetDModXDataMatrix.GetData(iObs, iComp)
+valueDModXPlus = predictedGetDModXPlusDataMatrix.GetData(iObs, iComp)
+```
+
+In the same way we could access the predicted Y values inn PLS or OPLS models:
 ```
 numPredictiveScores = model.GetNumberOfPredictiveComponents()
 
