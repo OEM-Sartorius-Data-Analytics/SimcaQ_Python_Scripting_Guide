@@ -6,5 +6,9 @@ We will use a SIMCA project where two OPLS models have been built using the BEER
 
 ![Original Dataset](https://github.com/OEM-Sartorius-Data-Analytics/SimcaQ_Python_Scripting_Guide/blob/main/06_PredictionInterface_1/Images/Dataset1.png)
 
+The SIMCA project file has two OPLS models, both predicting the alcohol content:
+
+![Original Dataset](https://github.com/OEM-Sartorius-Data-Analytics/SimcaQ_Python_Scripting_Guide/blob/main/06_PredictionInterface_1/Images/Models.png)
+
 
 
