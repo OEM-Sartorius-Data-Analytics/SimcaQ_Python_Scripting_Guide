@@ -19,3 +19,4 @@ python -m pip install -r requirements.txt
 - [Exploring the IModel Interface: Getting the Score Plot from models](05_ModelInterface_ScorePlot/ModelInterface_ExampleScorePlot.md).
 - [The IModel Interface: Exploring Models](04_ModelInterface_1/ModelInterface_ExploringModels.md).
 - [Making Predictions: The IPreparePrediction and IPrediction Interfaces](06_PredictionInterface_0/PredictionInterface_Introduction.md).
+- [](06_PredictionInterface_1/PredictionInterface_BeerExample.md).
