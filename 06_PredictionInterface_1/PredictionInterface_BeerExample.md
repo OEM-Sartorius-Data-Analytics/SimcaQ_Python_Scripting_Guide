@@ -6,5 +6,5 @@ We will use a SIMCA project where two OPLS models have been built using the BEER
 
 !(aa)[https://github.com/OEM-Sartorius-Data-Analytics/SimcaQ_Python_Scripting_Guide/06_PredictionInterface_1/Images/Dataset1.jpg]
 
-!(aa)[./Images/Dataset1.jpg "title"]
+!(aa)[Dataset1.png]
 
