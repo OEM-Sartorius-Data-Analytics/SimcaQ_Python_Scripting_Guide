@@ -10,7 +10,7 @@ def LoadInputCSVFile_v1(predictionDataFile):
     #print('hola')
     #print(pred_sample.iloc[0,0:10])
     inputVariableNames = list(pred_sample.columns.values)
-    inputData = pred_sample.iloc[1,5:].to_list()
+    inputData = pred_sample.iloc[0,:].to_list()
 
     return inputVariableNames, inputData
 
@@ -41,45 +41,67 @@ if __name__ == '__main__':
 
     # Open the SIMCA project
     try:
-        project = simcaq.OpenProject(pathSimcaProject, "")
+        oProject = simcaq.OpenProject(pathSimcaProject, "")
     except:
         print('Could not open the project.')
         raise SystemExit
 
     #Retrieve the number of models in the SIMCA project
-    number_models = project.GetNumberOfModels() 
+    numberModels = oProject.GetNumberOfModels() 
 
     # Iterate over indices of all project models
-    for model_index in range(1, number_models+1):
+    for iModelIndex in range(1, numberModels+1):
 
         # The index does not neccesarily coincide wit the model number
         # But we need the model number to retrieve information about the model
-        model_of_interest_number = project.GetModelNumberFromIndex(model_index)
+        modelNumber = oProject.GetModelNumberFromIndex(iModelIndex)
 
         # Once we know the model number, we can retrieve the Model Interface
         # for the specific model
-        oModel = project.GetModel(model_of_interest_number)
+        oModel = oProject.GetModel(modelNumber)
 
         # Retrieve the name of the model of interest
-        model_of_interest_name = oModel.GetModelName()
+        oModelName = oModel.GetModelName()
 
         # Check if the model name coincides with that passed as an input
         # parameter to the script
         # If it coincides, we update the boolean variable modelFound
         # and then exit the iteration
-        if model_of_interest_name == modelName:
+        if oModelName == modelName:
             modelFound = True
             break
 
-        # If the model name passed as an input parameter was not found
+    # If the model name passed as an input parameter was not found
     # in the SIMCA project, we exit the script
     if modelFound == False:
-        print('Could not fiund the specified model')
+        print('Could not find the specified model')
         raise SystemExit
 
     inputVariableNames, inputData = LoadInputCSVFile_v1(predictionDataFile)
 
+    print(len(inputVariableNames))
+    print(len(inputData))
+    print(inputVariableNames)
+
+    oPrepPred = oModel.PreparePrediction()
+
+    variableVector = oPrepPred.GetVariablesForPrediction()
+    variables_vec = [variableVector.GetVariable(i+1).GetName(1) for i in range(variableVector.GetSize())]
+    NameLookup = {name: ix+1 for ix, name in enumerate(variables_vec)}
+
+    for i, name in enumerate(inputVariableNames):
+        if name in NameLookup:
+            oPrepPred.SetQuantitativeData(1, NameLookup[name], inputData[i])
+
+    oPrediction = oPrepPred.GetPrediction()
+
+    resultData = oPrediction.GetYPredPS(1,True,True,None)
+
+    predictionDataMatrix = resultData.GetDataMatrix()
+    predictedY = predictionDataMatrix.GetData(1,1)
+
+
 
 
     # Dispose the project object
-    project.DisposeProject()
+    oProject.DisposeProject()
