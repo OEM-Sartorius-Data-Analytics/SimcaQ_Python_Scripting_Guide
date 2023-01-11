@@ -55,7 +55,7 @@ We will now write a first SIMCA-Q script that will make usse of these methods. S
 - *IsLicenseFileValid()*: Checks if a license file is present and, if so, if it is valid. 
 - *GetLicenseFileExpireDate()*: Provides the date until the license file is valid.
 
-The following [script](github.com/OEM-Sartorius-Data-Analytics/SimcaQ_Python_Scripting_Guide/blob/main/00_COM_and_License/COM_and_License.py) will print to the console whether the SIMCA-Q license is valid and, if so, until when:
+The following [script](https://github.com/OEM-Sartorius-Data-Analytics/SimcaQ_Python_Scripting_Guide/blob/main/00_COM_and_License/COM_and_License.py) will print to the console whether the SIMCA-Q license is valid and, if so, until when:
 ```
 def dispatch(app_name:str):
     try:
