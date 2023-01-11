@@ -104,7 +104,7 @@ In the same way we could access the predicted Y values inn PLS or OPLS models. F
 
 - The number of the component in the model we want the results from. Typically you would use the last predictive component (this is actually the only valid option for an OPLS model). You can actually retrieve the number of predictive components of your model by invoking the *GetNumberOfPredictiveComponents()* method of the *IModel* Interface: 
 ```
-numPredictiveScores = model.GetNumberOfPredictiveComponents()
+numPredictiveScores = oModel.GetNumberOfPredictiveComponents()
 ```
 
 - A boolean variable indicating if the function will return the y-values in the (unscaled) metric of the dataset. If *False*, the returned y-values will be in the scaled and centered metric of the workset.
@@ -115,7 +115,7 @@ numPredictiveScores = model.GetNumberOfPredictiveComponents()
 
 For instance, to retrieve a handle (an *IVectorData* object) for all predicted unscaled untransformed Y values, using the last component of the model, we could write:
 ```
-hPredictedY = prediction.GetYPredPS(numPredictiveScores,True,True,None)
+hPredictedY = oPrediction.GetYPredPS(numPredictiveScores,True,True,None)
 ```
 
 If we would like to retrieve a specific Y variable ...
@@ -130,15 +130,18 @@ hPredictedY = prediction.GetYPredPS(numPredictiveScores,True,True,predictionVect
 
 We could get the number of predicted Y variables in different ways. For instance, if we have retrieved predictions for all Y variables, we could use the *IMethod* method *GetColumnYSize()*:
 ```
-numYVariables = model.GetColumnYSize()
+numYVariables = oModel.GetColumnYSize()
 ```
 
 If we used an *IIntVector* object instead to predict just specific Y variables, we should know a priori how many we predicted. Nevertheless, this number can be retrieved in different ways. For instance we could use the ...
 
-Finally, to get the actual predicted Y values:
-
+Finally, to get the actual predicted Y values, we first need to retrieve a *IFloatMatrix* object from the *IVecvtorData* object by using the *GetDataMatrix()* method:
 ```
 predictionDataMatrix = hPredictedY.GetDataMatrix()
+```
+
+Finally, we are ready to retrieve the predicted value for a given observation and Y variable by using the *IFloatMatrix* method *GetData()*:
+```
 iObs = 1
 iVarY = 1
 predictedY = predictionDataMatrix.GetData(iObs,iVarY)

@@ -22,7 +22,7 @@ def Dispatch(app_name:str):
 
 def CreateFakeLowarpData_v1(oModel):
     inputVariableNames = ['glas', 'crtp', 'mica', 'amtp']
-    inputData = [1, 1, 1, 1]
+    inputData = [40, 10, 10, 40]
     return inputVariableNames, inputData
 
 if __name__ == '__main__':
@@ -86,33 +86,52 @@ if __name__ == '__main__':
         raise SystemExit
 
     
+    oPrepPred = oModel.PreparePrediction()
+
+    ############################################################
+    ############## GET INPUT DATA FOR PREDICTION
+    ############################################################
+
     inputVariableNames, inputData = CreateFakeLowarpData_v1(oModel)
 
-    print(len(inputVariableNames))
-    print(len(inputData))
-    print(inputVariableNames)
-
-    oPrepPred = oModel.PreparePrediction()
+    ############################################################
+    ############## VARIABLE-POSITION DICTIONARY
+    ############################################################    
 
     variableVector = oPrepPred.GetVariablesForPrediction()
     variables_vec = [variableVector.GetVariable(i+1).GetName(1) for i in range(variableVector.GetSize())]
     NameLookup = {name: ix+1 for ix, name in enumerate(variables_vec)}
 
+    ############################################################
+    ############## POPULATING PREPARE PREDICTION WITH DATA
+    ############################################################
+
     for i, name in enumerate(inputVariableNames):
         if name in NameLookup:
             oPrepPred.SetQuantitativeData(1, NameLookup[name], inputData[i])
 
+    ############################################################
+    ############## GET THE PREDICTION
+    ############################################################
+
     oPrediction = oPrepPred.GetPrediction()
 
-    resultData = oPrediction.GetYPredPS(1,True,True,None)
+    ############################################################
+    ############## PREDICTING Y VALUES
+    ############################################################
 
-    predictionDataMatrix = resultData.GetDataMatrix()
-    predictedY = predictionDataMatrix.GetData(1,1)
-    
-    
+    numPredictiveScores = oModel.GetNumberOfPredictiveComponents()
 
+    hPredictedY = oPrediction.GetYPredPS(numPredictiveScores,True,True,None)
 
+    numYVariables = oModel.GetColumnYSize()
 
+    predictionDataMatrix = hPredictedY.GetDataMatrix()
+    iObs = 1
+    #iVarY = 1
+    for iVarY in range(1, numYVariables+1):
+        predictedY = predictionDataMatrix.GetData(iObs,iVarY)
+        print('predicted y: ', predictedY)
 
     # Dispose the project object
     oProject.DisposeProject()
