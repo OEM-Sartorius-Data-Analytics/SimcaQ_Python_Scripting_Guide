@@ -4,7 +4,7 @@ The SIMCAQ interface provides access to methods to access additional interfaces/
 
 *IProject* objects are creted by using the SIMCAQ method *OpenProject()*, which takes two input parameters. These are strings accounting for i) the full path to the SIMCA project file and ii) the corresponding password in case the usp file is encrypted (this can be an empty string if there is no password).
 
-For instance, assuming that you have already created a SIMCA-Q COM object as describe in the [previous section](), let's name it *simcaq*, and that you have the path to a SIMCA project within a variable named e.g., *pathSimcaProject*, you could create an *IProject* object with no password by:
+For instance, assuming that you have already created a SIMCA-Q COM object as described in the [previous section](), let's name it *simcaq*, and that you have the path to a SIMCA project (without a password) within a variable named e.g., *pathSimcaProject*, you could create an *IProject* object by:
 ```
 project = simcaq.OpenProject(pathSimcaProject, "")
 ```
@@ -28,6 +28,8 @@ When needed, we can also dispose of the *IProject* object by using the *DisposeP
 ```
 project.DisposeProject()
 ```
+
+For additional available methods have a look to the [Help Files](https://www.sartorius.com/download/961736/simca-q-17-0-1-help-files-en-b-00260-sartorius-zip-data.zip) available at the [Sartorius SIMCA-Q web](https://www.sartorius.com/en/products/oem/oem-data-analytics/simca-q).
 
 In this repository you can find a standalone [example script](ExploreProjectInterface.py) that takes as an argument the path to a SIMCA project and that will print to the console the name of the project and its numbers of models and datasets.
 
