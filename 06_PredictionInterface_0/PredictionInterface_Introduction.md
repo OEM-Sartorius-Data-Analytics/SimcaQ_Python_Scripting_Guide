@@ -77,7 +77,7 @@ In this example, *predictedScores* is a *VectorData* object. To retrieve the act
 predictedScoresDataMatrix = predictedScores.GetDataMatrix()
 ```
 
-We can access the number of rows/observations of this data matrix by invoking the *GetNumberOfRows()* method and the number of columns/scores by invoking the *GetNumberOfColumns()* method. But, most improtantly, we can access the actual score values by invoking the *GetData()* method, which receives as input parameters the indices for observation and component of the scores that we want to retrieve. For instance, to retrieve the score for observation #1 and component #2:
+We can access the number of rows/observations of this data matrix by invoking the *GetNumberOfRows()* method and the number of columns/components by invoking the *GetNumberOfColumns()* method. But, most improtantly, we can access the actual score values by invoking the *GetData()* method, which receives as input parameters the indices for observation and component of the scores that we want to retrieve. For instance, to retrieve the score for observation #1 and component #2:
 ```
 iObs = 1
 iComp = 2
@@ -100,10 +100,32 @@ valueDModX = predictedGetDModXDataMatrix.GetData(iObs, iComp)
 valueDModXPlus = predictedGetDModXPlusDataMatrix.GetData(iObs, iComp)
 ```
 
-In the same way we could access the predicted Y values inn PLS or OPLS models:
+In the same way we could access the predicted Y values inn PLS or OPLS models. For this we can use the *GetYPredPS() method from the *IPrediction* interface. This function takes as input parameters:
+
+- The number of the component in the model we want the results from. Typically you would use the last predictive component (this is actually the only valid option for an OPLS model). You can actually retrieve the number of predictive components of your model by invoking the *GetNumberOfPredictiveComponents()* method of the *IModel* Interface: 
 ```
 numPredictiveScores = model.GetNumberOfPredictiveComponents()
+```
 
+- A boolean variable indicating if the function will return the y-values in the (unscaled) metric of the dataset. If *False*, the returned y-values will be in the scaled and centered metric of the workset.
+
+- An additional boolean variable indicating if the function will return the y-values in the unscaled untransformed metric of the workset. If False the returned y-values will be transformed in the same way as the workset.
+
+- A *IIntVector* object accounting for a list of Y column indices to use. *NULL* if all y columns in the model should be used.
+
+For instance, to retrieve a handle (actually a *IVectorData* object) for all predicted unscaled untransformed Y values, using the last component of the model, we could write:
+```
+hPredictedY = prediction.GetYPredPS(numPredictiveScores,True,True,None)
+```
+
+We could get the number of predicted Y variables in different ways. For instance, if we have retrieved predictions for all Y variables, we could use the *IMethod* method *GetColumnYSize()*:
+```
+numYVariables = model.GetColumnYSize()
+```
+
+If we used an *IIntVector* object instead to predict just specific Y variables, we should know a priorui how many we predicted. Neverthless, this numbe can be retrieved in different ways. FOr instance we could use the 
+
+```
 # Create a prediction vector according to SIMCA-Q requirements
 # for retrieving prediction parameters afterwards
 predictionVector = simcaq.GetNewIntVector(1)
