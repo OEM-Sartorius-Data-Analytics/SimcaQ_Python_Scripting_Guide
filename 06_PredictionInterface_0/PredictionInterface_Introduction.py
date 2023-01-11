@@ -1,17 +1,6 @@
-from win32com import client as win32
 import argparse
-import pandas as pd
 
-def CreateFakeData_v1(oModel):
-    #pred_sample = pd.read_csv(predictionDataFile, index_col=0)
-    #inputVariableNames = list(pred_sample.columns.values)
-    #inputData = pred_sample.iloc[0,:].to_list()
-
-    #return inputVariableNames, inputData
-    print(oModel.GetColumnXSize())
-    print(oModel.GetColumnYSize())
-
-def dispatch(app_name:str):
+def Dispatch(app_name:str):
     try:
         from win32com import client
         app = client.gencache.EnsureDispatch(app_name)
@@ -31,7 +20,10 @@ def dispatch(app_name:str):
         app = client.gencache.EnsureDispatch(app_name)
     return app
 
-    
+def CreateFakeLowarpData_v1(oModel):
+    inputVariableNames = ['glas', 'crtp', 'mica', 'amtp']
+    inputData = [1, 1, 1, 1]
+    return inputVariableNames, inputData
 
 if __name__ == '__main__':
 
@@ -44,20 +36,16 @@ if __name__ == '__main__':
     args = vars(ap.parse_args()) 
     pathSimcaProject = args["project"] 
     modelName = args["model"]
-    #predictionDataFile = args["input"]
     
     # Boolean variable to determine if the model has been found
     modelFound = False
 
     #Connect to the SIMCA-Q COM interface
-    #simcaq = dispatch('Umetrics.SIMCAQ')
-    simcaq = win32.dynamic.Dispatch('Umetrics.SIMCAQ')
-    #simcaq = win32.Dispatch('Umetrics.SIMCAQ')
-    """try:
-        simcaq = win32.Dispatch('Umetrics.SIMCAQ')
+    try:
+        simcaq = Dispatch('Umetrics.SIMCAQ')
     except:
         print('Could not connect to SIMCA-Q.')
-        raise SystemExit"""
+        raise SystemExit
 
     # Open the SIMCA project
     try:
@@ -97,8 +85,8 @@ if __name__ == '__main__':
         print('Could not find the specified model')
         raise SystemExit
 
-    """
-    inputVariableNames, inputData = LoadInputCSVFile_v1(predictionDataFile)
+    
+    inputVariableNames, inputData = CreateFakeLowarpData_v1(oModel)
 
     print(len(inputVariableNames))
     print(len(inputData))
@@ -120,8 +108,8 @@ if __name__ == '__main__':
 
     predictionDataMatrix = resultData.GetDataMatrix()
     predictedY = predictionDataMatrix.GetData(1,1)
-    """
-    CreateFakeData_v1(oModel)
+    
+    
 
 
 

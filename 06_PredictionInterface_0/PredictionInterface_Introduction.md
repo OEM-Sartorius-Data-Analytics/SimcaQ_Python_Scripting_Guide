@@ -26,8 +26,8 @@ The next step would be to populate the *IPreparePrediction* object with the inpu
 In the simple case where all variables are used for prediction, and where the input data is in the shape of e.g., a 2D python list, let's name it *inputData* , we could populate the *IPreparePrediction* object by:
 
 ```
-for iVar in range(1,numberOfVariables):
-    for iObs in range(1,numberOfObservations):
+for iVar in range(1,numberOfVariables+1):
+    for iObs in range(1,numberOfObservations+1):
         oPrepPred.SetQuantitativeData(iObs, iVar, inputData[obs][var])
 ```
 
@@ -43,7 +43,7 @@ NameLookup = {name: ix+1 for ix, name in enumerate(variables_vec)}
 
 for i, name in enumerate(test_variable_names):
     if name in NameLookup:
-        for iObs in range(1,numberOfObservations):
+        for iObs in range(1,numberOfObservations+1):
             oPrepPred.SetQuantitativeData(iObs, NameLookup[name], prediction_data[iObs][i])
 ```
 
@@ -58,7 +58,7 @@ Once this object is created, we can inmediately access all predicted quantities.
 
 For instance, to retrieve the predicted scores we can use the *GetTPS()* method. This method receives as input parameters either *None*, if we want to retrieve the predicted scores for all the components of the model, or a *IntVector* object listing the desired components. For instance, to predict scores in all components:
 ```
-oPrediction.GetTPS(None)
+predictedScores = oPrediction.GetTPS(None)
 ```
 
 but to retrieve only the score for e.g., the first component:
@@ -111,11 +111,21 @@ numPredictiveScores = model.GetNumberOfPredictiveComponents()
 
 - An additional boolean variable indicating if the function will return the y-values in the unscaled untransformed metric of the workset. If False the returned y-values will be transformed in the same way as the workset.
 
-- A *IIntVector* object accounting for a list of Y column indices to use. *NULL* if all y columns in the model should be used.
+- A *IIntVector* object accounting for a list of Y column indices to use. *None* if all Y columns in the model should be used.
 
-For instance, to retrieve a handle (actually a *IVectorData* object) for all predicted unscaled untransformed Y values, using the last component of the model, we could write:
+For instance, to retrieve a handle (an *IVectorData* object) for all predicted unscaled untransformed Y values, using the last component of the model, we could write:
 ```
 hPredictedY = prediction.GetYPredPS(numPredictiveScores,True,True,None)
+```
+
+If we would like to retrieve a specific Y variable ...
+```
+# Create a prediction vector according to SIMCA-Q requirements
+# for retrieving prediction parameters afterwards
+predictionVector = simcaq.GetNewIntVector(1)
+predictionVector.SetData(1, 1)
+
+hPredictedY = prediction.GetYPredPS(numPredictiveScores,True,True,predictionVector)
 ```
 
 We could get the number of predicted Y variables in different ways. For instance, if we have retrieved predictions for all Y variables, we could use the *IMethod* method *GetColumnYSize()*:
@@ -123,17 +133,14 @@ We could get the number of predicted Y variables in different ways. For instance
 numYVariables = model.GetColumnYSize()
 ```
 
-If we used an *IIntVector* object instead to predict just specific Y variables, we should know a priorui how many we predicted. Neverthless, this numbe can be retrieved in different ways. FOr instance we could use the 
+If we used an *IIntVector* object instead to predict just specific Y variables, we should know a priori how many we predicted. Nevertheless, this number can be retrieved in different ways. For instance we could use the ...
+
+Finally, to get the actual predicted Y values:
 
 ```
-# Create a prediction vector according to SIMCA-Q requirements
-# for retrieving prediction parameters afterwards
-predictionVector = simcaq.GetNewIntVector(1)
-predictionVector.SetData(1, 1)
-
-# Retrieve and print predicted y
-resultData = prediction.GetYPredPS(numPredictiveScores,True,True,predictionVector)
-predictionDataMatrix = resultData.GetDataMatrix()
-predictedY = predictionDataMatrix.GetData(1,1)
+predictionDataMatrix = hPredictedY.GetDataMatrix()
+iObs = 1
+iVarY = 1
+predictedY = predictionDataMatrix.GetData(iObs,iVarY)
 ```
 
