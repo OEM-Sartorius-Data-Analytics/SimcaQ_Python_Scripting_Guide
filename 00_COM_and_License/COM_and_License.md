@@ -51,7 +51,7 @@ if __name__ == '__main__':
 
 The SIMCA-Q COM object provides access to additional interfaces that will allow to handle Models, Predictions etc., as we will see in later section. Moreover, the SIMCA-Q COM object also has some methods of its own. For instance, this object has methods to check the validity of your SIMCA-Q license.
 
-We will now write a first SIMCA-Q script that will make usse of these methods. Specifically, we will use the following methods:
+We will now write a first SIMCA-Q script that will make use of these methods. Specifically, we will use the following methods:
 - *IsLicenseFileValid()*: Checks if a license file is present and, if so, if it is valid. 
 - *GetLicenseFileExpireDate()*: Provides the date until the license file is valid.
 
