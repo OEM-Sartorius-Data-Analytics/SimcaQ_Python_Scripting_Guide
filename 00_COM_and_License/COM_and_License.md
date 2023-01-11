@@ -55,12 +55,31 @@ We will now write a first SIMCA-Q script that will make usse of these methods. S
 - *IsLicenseFileValid()*: Checks if a license file is present and, if so, if it is valid. 
 - *GetLicenseFileExpireDate()*: Provides the date until the license file is valid.
 
-The following [script] will print to the console whether the SIMCA-Q license is valid and, if so, until when:
+The following [script](github.com/OEM-Sartorius-Data-Analytics/SimcaQ_Python_Scripting_Guide/blob/main/00_COM_and_License/COM_and_License.py) will print to the console whether the SIMCA-Q license is valid and, if so, until when:
 ```
-from win32com import client as win32
+def dispatch(app_name:str):
+    try:
+        from win32com import client
+        app = client.gencache.EnsureDispatch(app_name)
+    except AttributeError:
+        # Corner case dependencies.
+        import os
+        import re
+        import sys
+        import shutil
+        # Remove cache and try again.
+        MODULE_LIST = [m.__name__ for m in sys.modules.values()]
+        for module in MODULE_LIST:
+            if re.match(r'win32com\.gen_py\..+', module):
+                del sys.modules[module]
+        shutil.rmtree(os.path.join(os.environ.get('LOCALAPPDATA'), 'Temp', 'gen_py'))
+        from win32com import client
+        app = client.gencache.EnsureDispatch(app_name)
+    return app
+
 
 if __name__ == '__main__':
-    simcaq = win32.Dispatch('Umetrics.SIMCAQ')
+    simcaq = dispatch('Umetrics.SIMCAQ')
 
     if not simcaq.IsLicenseFileValid():
         sys.exit("Invalid license file")
