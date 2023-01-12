@@ -140,7 +140,7 @@ Finally, to get the actual predicted Y values, we first need to retrieve a *IFlo
 predictionDataMatrix = hPredictedY.GetDataMatrix()
 ```
 
-Finally, we are ready to retrieve the predicted value for a given observation and Y variable by using the *IFloatMatrix* method *GetData()*:
+Finally, we are ready to retrieve the predicted value for a given observation and Y variable by using the *IFloatMatrix* method *GetData()*. For instance, to retriev the predicted value for the first observation and the first Y variable:
 ```
 iObs = 1
 iVarY = 1
