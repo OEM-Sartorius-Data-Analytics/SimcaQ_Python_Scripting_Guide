@@ -118,32 +118,45 @@ For instance, to retrieve a handle (an *IVectorData* object) for all predicted u
 hPredictedY = oPrediction.GetYPredPS(numPredictiveScores,True,True,None)
 ```
 
-If we would like to retrieve a specific Y variable ...
+If we would like to retrieve one or several specific Y variables, we need to provide an *IIntVector* object as the last input parameter when calling *GetYPredPS()*. The *IIntVector* object is created from the *ISIMCAQ* method *GetNewIntVector()*, which receives as an input parameter the vector length, in this case the number of Y variables to predict. Then we need to provide the *IIntVector* object with a list of the indices of the Y variables to use through its method *SetData()*. For instance, imagine that we have a list, named *indYVarList*, with the indices of the Y variables to predict. In this case, we could retrieve the handle for the predicted Y quantities by:
 ```
-# Create a prediction vector according to SIMCA-Q requirements
-# for retrieving prediction parameters afterwards
-predictionVector = simcaq.GetNewIntVector(1)
-predictionVector.SetData(1, 1)
-
+predictionVector = simcaq.GetNewIntVector(len(indYVarList))
+for i, indYVar in enumerate(indYVarList):
+    predictionVector.SetData(i+1, indYVar)
+    
 hPredictedY = prediction.GetYPredPS(numPredictiveScores,True,True,predictionVector)
 ```
 
-We could get the number of predicted Y variables in different ways. For instance, if we have retrieved predictions for all Y variables, we could use the *IMethod* method *GetColumnYSize()*:
-```
-numYVariables = oModel.GetColumnYSize()
-```
-
-If we used an *IIntVector* object instead to predict just specific Y variables, we should know a priori how many we predicted. Nevertheless, this number can be retrieved in different ways. For instance we could use the ...
-
-Finally, to get the actual predicted Y values, we first need to retrieve a *IFloatMatrix* object from the *IVecvtorData* object by using the *GetDataMatrix()* method:
+To get the actual predicted Y values, we need now to retrieve a *IFloatMatrix* object from the *IVecvtorData* object by using the *GetDataMatrix()* method:
 ```
 predictionDataMatrix = hPredictedY.GetDataMatrix()
 ```
 
-Finally, we are ready to retrieve the predicted value for a given observation and Y variable by using the *IFloatMatrix* method *GetData()*. For instance, to retriev the predicted value for the first observation and the first Y variable:
+Finally, we are ready to retrieve the predicted value for a given observation and Y variable by using the *IFloatMatrix* method *GetData()*. For instance, to retrieve the predicted value for the first observation and the first Y variable:
 ```
 iObs = 1
 iVarY = 1
 predictedY = predictionDataMatrix.GetData(iObs,iVarY)
 ```
 
+We could get the values for all predicted Y variables by e.g., including this code in a for loop. Fir this we obviously need to know the total number of predicted Y variables. In case we have retrieved predictions for all Y variables, we could use for this purpose the *IMethod* method *GetColumnYSize()*:
+```
+numPredictedYVariables = oModel.GetColumnYSize()
+```
+
+In case we have just retreieved some of the variables, we could get this number by invoking the *IFloatMatrix* method *GetNumberOfCols()*:
+```
+numPredictedYVariables = predictionDataMatrix.GetNumberOfCols()
+```
+
+Actually, this method could be used in any case.
+
+Then, we can just retrieved the predicted value for all Y variables and e.g., populating a list with them, by:
+```
+predictedYValues = []
+iObs = 1
+for iVarY in range(1, numPredictedYVariables+1):
+    predictedYValues.append(predictionDataMatrix.GetData(iObs,iVarY))
+```
+
+In the case that we are making prediction from several observations simultaneously, we could just iterate over the number of observations as well.

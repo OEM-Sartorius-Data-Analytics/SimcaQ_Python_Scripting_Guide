@@ -122,17 +122,34 @@ if __name__ == '__main__':
 
     numPredictiveScores = oModel.GetNumberOfPredictiveComponents()
 
-    hPredictedY = oPrediction.GetYPredPS(numPredictiveScores,True,True,None)
+    #hPredictedY = oPrediction.GetYPredPS(numPredictiveScores,True,True,None)
 
-    numYVariables = oModel.GetColumnYSize()
+
+    indYVarList = [3,4]
+    # Create a prediction vector according to SIMCA-Q requirements
+    # for retrieving prediction parameters afterwards
+    predictionVector = simcaq.GetNewIntVector(len(indYVarList))
+    for i, indYVar in enumerate(indYVarList):
+        print(f'{i}\t{indYVar}')
+        predictionVector.SetData(i+1, indYVar)
+    #predictionVector.SetData(2, 4)
+    #predictionVector.SetData(3, 3)
+
+    hPredictedY = oPrediction.GetYPredPS(numPredictiveScores,True,True,predictionVector)
+
+
+    numPredictedYVariables = predictionDataMatrix.GetNumberOfCols()
 
     predictionDataMatrix = hPredictedY.GetDataMatrix()
     iObs = 1
     #iVarY = 1
-    for iVarY in range(1, numYVariables+1):
+    for iVarY in range(1, numPredictedYVariables+1):
         predictedY = predictionDataMatrix.GetData(iObs,iVarY)
+        print('iVarY: ', iVarY)
         print('predicted y: ', predictedY)
 
+    numYVariables = predictionDataMatrix.GetNumberOfCols()
+    print(numYVariables)
     # Dispose the project object
     oProject.DisposeProject()
         
