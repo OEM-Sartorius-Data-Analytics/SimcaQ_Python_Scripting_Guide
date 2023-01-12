@@ -22,4 +22,4 @@ python -m pip install -r requirements.txt
 - [The IModel Interface: Introduction](04_ModelInterface_0/ModelInterface_Introduction.md).
 - [The IModel Interface: Exploring Models](04_ModelInterface_1/ModelInterface_ExploringModels.md).
 - [Making Predictions: The IPreparePrediction and IPrediction Interfaces](06_PredictionInterface_0/PredictionInterface_Introduction.md).
-- [Making Predictions: An Example Using the Beer Dataset](06_PredictionInterface_1/PredictionInterface_BeerExample.md).
+- [Making Predictions: An Example Using the Beer Dataset](06_PredictionInterface_1/PredictionInterface_BeerExample.ipynb).
