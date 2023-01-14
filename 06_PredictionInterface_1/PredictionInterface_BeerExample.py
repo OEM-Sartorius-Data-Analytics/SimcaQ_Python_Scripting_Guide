@@ -3,7 +3,7 @@ import argparse
 import pandas as pd
 
 def LoadInputCSVFile_v1(predictionDataFile):
-    #pred_sample = pd.read_excel(predictionDataFile, index_col=0)
+    #pred_sample = pd.read_excel(predictionDataFile, index_col=False)
     pred_sample = pd.read_csv(predictionDataFile, index_col=0)
     #print(pred_sample.head())
     #pred_sample.to_csv("predictionDataFile.csv", index=False)
