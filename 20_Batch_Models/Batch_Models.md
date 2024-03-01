@@ -1,4 +1,4 @@
-# Working with Batch Models
+# Working with Batch Models: An Introduction
 
 With a valid SIMCA-QP+ license, it is possible to use SIMCA-Q to load and investigate SIMCA Batch Models as well as to use them for predictions.
 
