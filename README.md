@@ -10,6 +10,8 @@ We will not cover here all the possibilities of SIMCA-Q, only the most common so
 
 ## Index
 
+### SIMCA-QP
+
 - [Access the COM interface of SIMCA-Q & write a first script to check your SIMCA-Q license](00_COM_and_License/COM_and_License.md).
 - [The IProject Interface](01_ProjectInterface/ExploreProjectInterface.md).
 - [The IModelInfo Interface](02_ModelInfoInterface_0/ExploreModelInfoInterface.md).
@@ -18,3 +20,11 @@ We will not cover here all the possibilities of SIMCA-Q, only the most common so
 - [The IModel Interface: Exploring Models](04_ModelInterface_1/ModelInterface_ExploringModels.md).
 - [Making Predictions: The IPreparePrediction and IPrediction Interfaces](06_PredictionInterface_0/PredictionInterface_Introduction.md).
 - [Making Predictions: An Example Using the Beer Dataset](06_PredictionInterface_1/PredictionInterface_BeerExample.ipynb).
+
+### SIMCA-QM
+
+...
+
+### SIMCA-QP+
+
+- [Working with batch models](20_Batch_Models/Batch_Models.md).
