@@ -28,3 +28,4 @@ We will not cover here all the possibilities of SIMCA-Q, only the most common so
 ### SIMCA-QP+
 
 - [Working with Batch Models: An Introduction](20_Batch_Models/Batch_Models.md).
+- [Making Predictions with Batch Level Models](20_Batch_Models/BLM_Predictions.md).
