@@ -44,3 +44,42 @@ for iBLM in range(1,NumberBLMs+1):
     nBLM = bModel.GetBatchEvolutionModelNumber(iBLM)
     BLModels.append(BModel.GetBatchEvolutionModel(nBLM))
 ```
+
+IBatchEvolutionModel and IBatchLevelModel objects provide access to the methods of the respective interfaces. 
+
+Additionally, both can access the methods of the more generic IModel interface.
+We can for instance know if the model is fitted by using the IsModelFitted() method.
+We can get the name of the model with the method GetName(), the number of predictive components with GetNumberOfComponents(), or the score matrix with GetT().
+These are just some examples. For a complete list of IModel methods refer to the official SIMCA-Q help.
+
+As an example of the possibilities, the following code generates and prints a pandas dataframe with the scores of a Batch Level Model,
+previously loaded into the variable BLModel:
+```
+def string_vector_to_list(simcaq_string_vector):
+    string_vector_list = []
+    for i in range(1,simcaq_string_vector.GetSize()+1):
+        string_vector_list.append(simcaq_string_vector.GetData(i))
+    return string_vector_list
+
+def float_matrix_to_list(simcaq_float_matrix):
+    float_matrix_2D_list = []
+    for iRow in range(1, simcaq_float_matrix.GetNumberOfRows()+1):
+        float_matrix_1D_list = []
+        for iCol in range(1, simcaq_float_matrix.GetNumberOfCols()+1):
+            float_matrix_1D_list.append(simcaq_float_matrix.GetData(iRow,iCol))
+        float_matrix_2D_list.append(float_matrix_1D_list)
+    return float_matrix_2D_list
+
+scores = BLModel.GetT(None)
+
+models = string_vector_to_list(scores.GetColumnNames())
+batches = string_vector_to_list(scores.GetRowNames())
+data = float_matrix_to_list(scores.GetDataMatrix())
+
+df = pd.DataFrame(columns=batches, index=models)
+
+for i in range(len(models)):
+    df.loc[models[i]] = data[i]
+
+print(df)
+```
