@@ -27,7 +27,20 @@ for iPhase in range(1,bModel.GetNumberOfBEM()+1):
 
 One can then feed into the IPrepareBatchPrediction object the data required to make a prediction.
 At this point one needs to be careful, as each of the variables retrieved by GetVariablesForBatchPrediction(iPhase) will 
-have a different value for each maturity value of the model.
+have a different value for each maturity value of the model. Actually, maturity will most probably be one of the variables 
+retrieved by GetVariablesForBatchPrediction(iPhase).
+
+For making predictions with Batch Level Models we will need to provide values for process parameters measured at maturity values 
+at least close to the maturity values used when building the model. These maturity values ie the ones for which the corresponding Barch Evolution model was built,
+can be retrieved by many different ways. One is to retrieve the names for the rows of the matrix retrieve by methods of the 
+corresponding Batch Evolution Model such as GetYPred() and GetAlignedYPred().
+
+The IPrepareBatchPrediction offers several methods to load data to make predictions with the corresponding Batch Level Model. 
+One is SetQuantitativeBatchData(iPhase, iObs, iVar, value). Here iPhase corresponds to the number of the underlying Batch 
+Evolution Model. iObs to the _observation_ index. Note that here this index is actually the index of the _maturity stamp_. For instance,
+if during the process variables were measured at x maturity values, iObs could be provided up to a value of x. Note that most probably
+you will need at least two maturity stamps ie, process parameter values for at least two maturity stamps, to be able to make a prediction.
+
 
 
 
